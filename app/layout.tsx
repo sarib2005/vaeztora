@@ -7,8 +7,6 @@ const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
   display: "swap",
-  // Optional: pin the weights you actually use
-  // weight: ["400", "600", "700", "800"],
 });
 
 const inter = Inter({
@@ -28,8 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
-      <Header />
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
