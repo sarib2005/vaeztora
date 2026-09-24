@@ -105,8 +105,8 @@ export const Header: React.FC<HeaderProps> = ({
       }}
       className={`fixed ${isPastTopBanner ? 'top-0' : 'top-10'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-neutral-950/70 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/40 py-3.5'
-          : 'bg-black/20 backdrop-blur-md border-b border-white/10 py-4 sm:py-5'
+          ? 'bg-neutral-950/35 backdrop-blur-sm border-b border-white/[0.08] py-3.5'
+          : 'bg-black/10 backdrop-blur-[2px] border-b border-white/[0.06] py-4 sm:py-5'
       }`}
     >
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] flex items-center justify-between">
@@ -176,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
                     transition={{ duration: 0.18, ease: 'easeOut' }}
                     className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50 w-56"
                   >
-                    <div className="bg-neutral-950/85 backdrop-blur-xl border border-white/15 rounded-xl p-2 shadow-2xl overflow-hidden divide-y divide-white/5">
+                    <div className="bg-neutral-950/75 backdrop-blur-md border border-white/10 rounded-xl p-2 shadow-xl overflow-hidden divide-y divide-white/5">
                       <div className="py-1 space-y-0.5">
                         {item.items?.map((subItem) => (
                           <a
@@ -268,7 +268,7 @@ export const Header: React.FC<HeaderProps> = ({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden border-t border-white/10 bg-neutral-950/95 backdrop-blur-2xl px-4 sm:px-6 md:px-8 py-5 space-y-4"
+            className="md:hidden border-t border-white/10 bg-neutral-950/85 backdrop-blur-md px-4 sm:px-6 md:px-8 py-5 space-y-4"
           >
             {navItems.map((item) => (
               <div key={item.label} className="space-y-2">
