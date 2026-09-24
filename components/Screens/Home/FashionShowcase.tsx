@@ -66,7 +66,7 @@ export const FashionShowcase: React.FC = () => {
   const [activeId, setActiveId] = useState<number>(1);
 
   return (
-    <section className="w-full bg-[#f6f6f8] text-neutral-900 py-16 sm:py-24 select-none transition-colors duration-300">
+    <section className="w-full bg-[#F3F3F5] text-neutral-900 py-16 sm:py-12 select-none transition-colors duration-300">
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] space-y-8 sm:space-y-10">
 
         <motion.div

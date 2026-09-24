@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface PillCategory {
   id: string;
@@ -11,6 +12,10 @@ interface PillCategory {
   count?: string;
   shape?: 'wide' | 'round';
 }
+
+// 👇 Drop your overlay image at /public/images/newseason-overlay.png
+// and it will render behind the pills. Set to null to disable.
+const OVERLAY_IMAGE: string | null = '/images/homeimgs/bg-overlay.png';
 
 export const NewSeason: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -56,15 +61,31 @@ export const NewSeason: React.FC = () => {
   ];
 
   return (
-    <section className="relative w-full bg-[#f4f4f7] py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden select-none">
-      
-      {/* Soft Ethereal Sunset/Pastel Glow in the Background (Matching screenshot) */}
+    <section className="relative w-full bg-[#f4f4f7] py-20 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-hidden select-none">
+
+      {/* ── Background overlay image ─────────────────────────────── */}
+      {OVERLAY_IMAGE && (
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={OVERLAY_IMAGE}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-60"
+          />
+          {/* Optional soft veil so pills stay legible over the overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f4f4f7]/40 via-transparent to-[#f4f4f7]/40" />
+        </div>
+      )}
+
+      {/* Soft Ethereal Sunset/Pastel Glow in the Background */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div className="w-[600px] sm:w-[900px] h-[350px] rounded-full bg-gradient-to-r from-amber-200/35 via-rose-200/25 to-sky-200/20 blur-3xl transform -rotate-6" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto space-y-10 sm:space-y-12 text-center">
-        
+      <div className="relative max-w-5xl mx-auto space-y-12 sm:space-y-14 text-center">
+
         {/* Section Heading: "New Season, New Style" */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -73,21 +94,21 @@ export const NewSeason: React.FC = () => {
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="space-y-2"
         >
-          <h2 className="font-heading text-3xl sm:text-5xl font-bold tracking-tight text-neutral-950">
+          <h2 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-neutral-950">
             New Season, New Style
           </h2>
         </motion.div>
 
         {/* Floating Category Pills & Image Capsules Cloud */}
-        <div className="flex flex-col items-center gap-3.5 sm:gap-4.5">
-          
+        <div className="flex flex-col items-center gap-5 sm:gap-6">
+
           {/* Row 1 */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap items-center justify-center gap-3 sm:gap-3.5"
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-5"
           >
             {row1.map((item) => (
               <PillOrImage
@@ -105,7 +126,7 @@ export const NewSeason: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-3 sm:gap-3.5"
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-5"
           >
             {row2.map((item) => (
               <PillOrImage
@@ -123,7 +144,7 @@ export const NewSeason: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-3 sm:gap-3.5"
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-5"
           >
             {row3.map((item) => (
               <PillOrImage
@@ -156,12 +177,14 @@ const PillOrImage: React.FC<PillOrImageProps> = ({ item, isActive, onSelect }) =
         <motion.div
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
-          className="w-11 h-11 sm:w-13 sm:h-13 rounded-full overflow-hidden border border-black shadow-sm bg-neutral-200 cursor-pointer shrink-0"
+          className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border border-black shadow-sm bg-neutral-200 cursor-pointer shrink-0"
         >
-          <img
-            src={item.image}
+          <Image
+            src={item.image!}
             alt="Category preview"
-            className="w-full h-full object-cover object-center"
+            fill
+            sizes="(max-width: 640px) 64px, 80px"
+            className="object-cover object-center"
           />
         </motion.div>
       );
@@ -171,12 +194,14 @@ const PillOrImage: React.FC<PillOrImageProps> = ({ item, isActive, onSelect }) =
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.96 }}
-        className="w-24 sm:w-28 h-10 sm:h-12 rounded-full overflow-hidden border border-black shadow-sm bg-neutral-200 cursor-pointer shrink-0"
+        className="relative w-32 sm:w-40 h-14 sm:h-16 rounded-full overflow-hidden border border-black shadow-sm bg-neutral-200 cursor-pointer shrink-0"
       >
-        <img
-          src={item.image}
+        <Image
+          src={item.image!}
           alt="Category capsule"
-          className="w-full h-full object-cover object-[center_30%]"
+          fill
+          sizes="(max-width: 640px) 128px, 160px"
+          className="object-cover object-[center_30%]"
         />
       </motion.div>
     );
@@ -186,7 +211,7 @@ const PillOrImage: React.FC<PillOrImageProps> = ({ item, isActive, onSelect }) =
     <button
       type="button"
       onClick={onSelect}
-      className={`group relative overflow-hidden px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-black shadow-xs cursor-pointer select-none transition-all duration-300 ${
+      className={`group relative overflow-hidden px-7 sm:px-9 py-3.5 sm:py-4 rounded-full border border-black shadow-xs cursor-pointer select-none transition-all duration-300 ${
         isActive ? 'bg-black text-white' : 'bg-transparent'
       }`}
     >
@@ -196,9 +221,9 @@ const PillOrImage: React.FC<PillOrImageProps> = ({ item, isActive, onSelect }) =
         aria-hidden="true"
       />
 
-      {/* Pill Text Content: Transitions color smoothly as fill rises */}
+      {/* Pill Text Content */}
       <span
-        className={`relative z-10 text-xs sm:text-sm font-medium tracking-tight whitespace-nowrap transition-colors duration-300 ${
+        className={`relative z-10 text-sm sm:text-base font-medium tracking-tight whitespace-nowrap transition-colors duration-300 ${
           isActive ? 'text-white' : 'text-neutral-900 group-hover:text-white'
         }`}
       >
