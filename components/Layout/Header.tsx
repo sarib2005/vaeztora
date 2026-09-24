@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
       const currentScrollY = window.scrollY;
 
       // Check if scrolled past top banner (40px)
-      setIsPastTopBanner(currentScrollY > 38);
+      setIsPastTopBanner(currentScrollY > 40);
 
       // Check if scrolled past top threshold for glassmorphic styling
       setIsScrolled(currentScrollY > 20);
@@ -103,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
         duration: 0.35,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className={`fixed ${isPastTopBanner ? 'top-0' : 'top-10'} left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed ${isPastTopBanner ? 'top-0' : 'top-[var(--announcement-height)]'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
           ? 'bg-neutral-950/35 backdrop-blur-sm border-b border-white/[0.08] py-3.5'
           : 'bg-black/10 backdrop-blur-[2px] border-b border-white/[0.06] py-4 sm:py-5'

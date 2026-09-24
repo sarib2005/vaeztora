@@ -81,12 +81,12 @@ export function AnnouncementBar() {
     <>
       {/* MONOCHROME BLACK TOP UTILITY BANNER */}
       <motion.div
-        initial={{ y: -36, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full bg-black text-neutral-300 border-b border-neutral-900 select-none text-[11.5px] tracking-tight z-40"
+        className="relative w-full h-[var(--announcement-height)] bg-black text-neutral-300 border-b border-neutral-900 select-none text-[11.5px] tracking-tight z-40"
       >
-        <div className="w-full px-[98px] h-10 flex items-center justify-between gap-4">
+        <div className="w-full px-[98px] h-full flex items-center justify-between gap-4">
           
           {/* 1. LEFT: Social Icons + Phone Number */}
           <motion.div

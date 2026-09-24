@@ -156,7 +156,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-neutral-950 text-white select-none">
+    <section className="relative w-full h-[calc(100dvh-var(--announcement-height))] flex flex-col justify-between overflow-hidden bg-neutral-950 text-white select-none">
 
       {/* 1. SLIDESHOW BACKGROUND — pure slide, no fade */}
       <div className="absolute inset-0 z-0 overflow-hidden">
