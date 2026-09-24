@@ -20,7 +20,7 @@ const CARDS_DATA: FashionCard[] = [
     id: 1,
     numberStr: '01',
     image: '/images/homeimgs/show1.png',
-    tickerText: 'TANK TOP SALE · TANK TOP SALE · TANK TOP SALE',
+    // tickerText: 'TANK TOP SALE · TANK TOP SALE · TANK TOP SALE',
     title: 'Modern Fits for Modern Life',
     description:
       'Elevate your everyday style with modern designs made for comfort, & confidence. Discover thoughtfully crafted apparel that blends contemporary design.',
@@ -31,7 +31,7 @@ const CARDS_DATA: FashionCard[] = [
     id: 2,
     numberStr: '02',
     image: '/images/homeimgs/show2.png',
-    tickerText: 'SUNLIT FLEECE · WINTER WARMTH · LIMITED DROP',
+    // tickerText: 'SUNLIT FLEECE · WINTER WARMTH · LIMITED DROP',
     title: 'Sunlit Textures & Warmth',
     description:
       'Ultra-soft statement shearling silhouettes infused with rich earth tones. Unrivaled insulation without compromising effortless luxury.',
@@ -42,7 +42,7 @@ const CARDS_DATA: FashionCard[] = [
     id: 3,
     numberStr: '03',
     image: '/images/homeimgs/show3.png',
-    tickerText: 'STREET LAYERS · NEW ARRIVALS · AUTUMN CAPSULE',
+    // tickerText: 'STREET LAYERS · NEW ARRIVALS · AUTUMN CAPSULE',
     title: 'Architectural Comfort',
     description:
       'Engineered for transition and movement. Lightweight weather-resistant outerwear tailored with sculpted necklines and fluid draping.',
@@ -220,7 +220,7 @@ export const FashionShowcase: React.FC = () => {
                     </AnimatePresence>
 
                     {/* Expanded-only: ticker strip along the bottom of the image */}
-                    <AnimatePresence initial={false}>
+                    {/* <AnimatePresence initial={false}>
                       {isOpened && (
                         <motion.div
                           key="ticker"
@@ -240,7 +240,7 @@ export const FashionShowcase: React.FC = () => {
                           </div>
                         </motion.div>
                       )}
-                    </AnimatePresence>
+                    </AnimatePresence> */}
                   </motion.div>
 
                   {/*
