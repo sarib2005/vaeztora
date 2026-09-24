@@ -337,7 +337,7 @@ export function AnnouncementBar() {
                 >
                   Done
                 </button>
-              </div>
+              </div>    
             </motion.div>
           </div>
         )}

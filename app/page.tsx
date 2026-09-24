@@ -1,11 +1,11 @@
 import AnnouncementBar from "@/components/Reusable/AnnouncementBar"
+import { Hero } from "@/components/Screens/Home/Hero"
 
 export default function Home() {
   return (
     <main>
       <AnnouncementBar/>
-      <div>Hey yall</div>
-      <h1>hey</h1>
+      <Hero />
     </main>
   )
 

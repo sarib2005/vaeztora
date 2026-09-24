@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/Layout/Header";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
+      <Header />
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
