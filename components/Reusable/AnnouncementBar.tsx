@@ -113,7 +113,7 @@ export function AnnouncementBar() {
             >
               <Phone className="w-3 h-3 text-neutral-500 group-hover:text-neutral-300 transition-colors hidden sm:inline" />
               <span className="font-mono text-neutral-200 group-hover:text-white tracking-normal">
-                0123456780
+                0323-3232541
               </span>
               {isCopiedPhone && (
                 <span className="text-[10px] text-emerald-400 font-sans hidden md:inline flex items-center gap-0.5">
