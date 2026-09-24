@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, ArrowUpRight, Package, ShieldCheck, RefreshCw, Headphones } from 'lucide-react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { ArrowRight, ArrowLeft, Package, ShieldCheck, RefreshCw, Headphones } from 'lucide-react';
 
 interface SlideData {
   id: number;
   image: string;
-  badge?: string;
   titleLine1: string;
   titleLine2: string;
   subtitle: string;
@@ -18,7 +17,6 @@ interface SlideData {
 const HERO_SLIDES: SlideData[] = [
   {
     id: 1,
-    // Golden hour sunlight fashion editorial with models in clean white shirts and tops
     image: '/images/homeimgs/slide1.png',
     titleLine1: 'Your Signature Style',
     titleLine2: 'Right Starts Here',
@@ -28,7 +26,6 @@ const HERO_SLIDES: SlideData[] = [
   },
   {
     id: 2,
-    // Elegant warm light linen & desert luxury fashion aesthetic
     image: '/images/homeimgs/slide2.png',
     titleLine1: 'Pure Textures,',
     titleLine2: 'Effortless Form',
@@ -36,22 +33,13 @@ const HERO_SLIDES: SlideData[] = [
     primaryCta: { label: 'NEW IN', href: '#new-in' },
     secondaryCta: { label: 'COLLECTIONS', href: '#collections' },
   },
-  {
-    id: 3,
-    // Modern architectural tailoring in golden sun
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=2400&q=85',
-    titleLine1: 'Summer Capsule',
-    titleLine2: 'Edition 2026',
-    subtitle: 'Thoughtfully designed silhouettes that transition from dawn to dusk.',
-    primaryCta: { label: 'DISCOVER', href: '#discover' },
-    secondaryCta: { label: 'LOOKBOOK', href: '#lookbook' },
-  },
 ];
+
+const EASE_SMOOTH = [0.16, 1, 0.3, 1] as const;
 
 export const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
 
   const slide = HERO_SLIDES[currentSlide];
 
@@ -65,47 +53,53 @@ export const Hero: React.FC = () => {
     });
   };
 
-  // Keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') paginate(-1);
-      if (e.key === 'ArrowRight') paginate(1);
+      if (e.key === 'ArrowLeft') {
+        setDirection(-1);
+        setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+      }
+      if (e.key === 'ArrowRight') {
+        setDirection(1);
+        setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const slideVariants = {
+  // Pure horizontal slide — no opacity, no scale, no fade
+  const slideVariants: Variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? '100%' : '-100%',
-      opacity: 0,
-      scale: 1.05,
     }),
     center: {
       x: 0,
-      opacity: 1,
-      scale: 1,
       transition: {
-        x: { type: 'spring' as const, stiffness: 280, damping: 32 },
-        opacity: { duration: 0.5 },
-        scale: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+        x: { type: 'spring', stiffness: 210, damping: 30, mass: 1 },
       },
     },
     exit: (dir: number) => ({
       x: dir < 0 ? '100%' : '-100%',
-      opacity: 0,
-      scale: 0.98,
       transition: {
-        x: { type: 'spring' as const, stiffness: 280, damping: 32 },
-        opacity: { duration: 0.4 },
+        x: { type: 'spring', stiffness: 210, damping: 30, mass: 1 },
       },
     }),
   };
 
+  // Content entrance — no opacity on the wrapper, just a subtle y-lift per item
+  const contentItemVariants: Variants = {
+    hidden: { y: 18 },
+    visible: {
+      y: 0,
+      transition: { duration: 0.7, ease: EASE_SMOOTH },
+    },
+  };
+
   return (
     <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-neutral-950 text-white select-none">
-      
-      {/* 1. SLIDESHOW BACKGROUND CAROUSEL WITH DRAG/SWIPE SUPPORT */}
+
+      {/* 1. SLIDESHOW BACKGROUND — pure slide, no fade */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
@@ -117,100 +111,91 @@ export const Hero: React.FC = () => {
             exit="exit"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.25}
-            onDragStart={() => setIsDragging(true)}
+            dragElastic={0.15}
             onDragEnd={(_, info) => {
-              setIsDragging(false);
-              const swipeThreshold = 50;
-              if (info.offset.x < -swipeThreshold) {
+              const swipeThreshold = 60;
+              const velocity = info.velocity.x;
+              if (info.offset.x < -swipeThreshold || velocity < -500) {
                 paginate(1);
-              } else if (info.offset.x > swipeThreshold) {
+              } else if (info.offset.x > swipeThreshold || velocity > 500) {
                 paginate(-1);
               }
             }}
-            className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-pan-y"
+            className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-pan-y will-change-transform"
           >
-            {/* Background High-Res Image */}
             <img
               src={slide.image}
               alt="Editorial fashion models"
               className="w-full h-full object-cover object-[center_28%] pointer-events-none"
+              draggable={false}
             />
-
-            {/* Cinematic Gradient Overlays to match the warm golden sunset ambiance */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-black/35 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 bg-amber-900/10 mix-blend-color pointer-events-none" />
           </motion.div>
         </AnimatePresence>
+
+        {/* Single subtle gradient for text legibility — sits behind everything */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none" />
       </div>
 
-      {/* 2. HERO CONTENT OVERLAY (Centered / Left Aligned) */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-36 sm:pt-44 lg:pt-48 pb-20 flex-1 flex flex-col justify-end">
-        <div className="max-w-2xl space-y-6">
-          
-          {/* Animated Headline: Exactly matching reference */}
-          <div className="space-y-1 sm:space-y-2">
+      {/* 2. HERO CONTENT — width matches topbar */}
+      <div className="relative z-20 w-full px-4 sm:px-6 md:px-8 lg:px-[98px] pt-36 sm:pt-44 lg:pt-48 pb-20 flex-1 flex flex-col justify-end">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`content-${currentSlide}`}
+            className="max-w-2xl space-y-6"
+          >
             <motion.h1
-              key={`title-${currentSlide}`}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              variants={contentItemVariants}
+              initial="hidden"
+              animate="visible"
               className="font-heading text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-md"
             >
               <span className="block">{slide.titleLine1}</span>
               <span className="block">{slide.titleLine2}</span>
             </motion.h1>
-          </div>
 
-          {/* Subtitle */}
-          <motion.p
-            key={`subtitle-${currentSlide}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.28, ease: 'easeOut' }}
-            className="text-white/90 text-sm sm:text-base lg:text-lg max-w-lg font-normal drop-shadow-sm"
-          >
-            {slide.subtitle}
-          </motion.p>
-
-          {/* Call to Action Pill Buttons */}
-          <motion.div
-            key={`cta-${currentSlide}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.38, ease: 'easeOut' }}
-            className="flex flex-wrap items-center gap-3.5 pt-2"
-          >
-            {/* Button 1: WOMEN */}
-            <a
-              href={slide.primaryCta.href}
-              className="group inline-flex items-center gap-3 px-5 sm:px-6 py-3 rounded-full bg-white text-neutral-950 font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:bg-neutral-100 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+            <motion.p
+              variants={contentItemVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.08 }}
+              className="text-white/90 text-sm sm:text-base lg:text-lg max-w-lg font-normal drop-shadow-sm"
             >
-              <span className="w-5 h-5 rounded-full border border-neutral-950/30 flex items-center justify-center group-hover:border-neutral-950 transition-colors">
-                <ArrowRight className="w-3 h-3 text-neutral-950 group-hover:translate-x-0.5 transition-transform" />
-              </span>
-              <span>{slide.primaryCta.label}</span>
-            </a>
+              {slide.subtitle}
+            </motion.p>
 
-            {/* Button 2: VIEW ALL */}
-            <a
-              href={slide.secondaryCta.href}
-              className="group inline-flex items-center gap-3 px-5 sm:px-6 py-3 rounded-full bg-white text-neutral-950 font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:bg-neutral-100 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+            <motion.div
+              variants={contentItemVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.16 }}
+              className="flex flex-wrap items-center gap-3.5 pt-2"
             >
-              <span className="w-5 h-5 rounded-full border border-neutral-950/30 flex items-center justify-center group-hover:border-neutral-950 transition-colors">
-                <ArrowRight className="w-3 h-3 text-neutral-950 group-hover:translate-x-0.5 transition-transform" />
-              </span>
-              <span>{slide.secondaryCta.label}</span>
-            </a>
+              <a
+                href={slide.primaryCta.href}
+                className="group inline-flex items-center gap-3 px-5 sm:px-6 py-3 rounded-full bg-white text-neutral-950 font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:bg-neutral-100 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+              >
+                <span className="w-5 h-5 rounded-full border border-neutral-950/30 flex items-center justify-center group-hover:border-neutral-950 transition-colors">
+                  <ArrowRight className="w-3 h-3 text-neutral-950 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+                <span>{slide.primaryCta.label}</span>
+              </a>
+
+              <a
+                href={slide.secondaryCta.href}
+                className="group inline-flex items-center gap-3 px-5 sm:px-6 py-3 rounded-full bg-white text-neutral-950 font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:bg-neutral-100 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+              >
+                <span className="w-5 h-5 rounded-full border border-neutral-950/30 flex items-center justify-center group-hover:border-neutral-950 transition-colors">
+                  <ArrowRight className="w-3 h-3 text-neutral-950 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+                <span>{slide.secondaryCta.label}</span>
+              </a>
+            </motion.div>
           </motion.div>
-
-        </div>
+        </AnimatePresence>
       </div>
 
-      {/* 3. CAROUSEL NAVIGATION ARROWS (Bottom Right - Exactly as in the screenshot) */}
-      <div className="absolute right-6 sm:right-10 lg:right-16 bottom-28 sm:bottom-32 z-30 flex items-center gap-3">
-        {/* Left Arrow Button (Pill with rounded corners) */}
+      {/* 3. NAVIGATION ARROWS — aligned to topbar padding */}
+      <div className="absolute right-4 sm:right-6 md:right-8 lg:right-[98px] bottom-28 sm:bottom-32 z-30 flex items-center gap-3">
         <motion.button
           type="button"
           onClick={() => paginate(-1)}
@@ -220,11 +205,9 @@ export const Hero: React.FC = () => {
           title="Previous Slide"
           aria-label="Previous Slide"
         >
-          {/* Curved/clean left arrow matching screenshot */}
-          <ArrowLeft className="w-4.5 h-4.5 text-neutral-800 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-[18px] h-[18px] text-neutral-800 group-hover:-translate-x-0.5 transition-transform" />
         </motion.button>
 
-        {/* Right Arrow Button (Pill with rounded corners) */}
         <motion.button
           type="button"
           onClick={() => paginate(1)}
@@ -234,76 +217,70 @@ export const Hero: React.FC = () => {
           title="Next Slide"
           aria-label="Next Slide"
         >
-          {/* Curved/clean right arrow matching screenshot */}
-          <ArrowRight className="w-4.5 h-4.5 text-neutral-800 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-[18px] h-[18px] text-neutral-800 group-hover:translate-x-0.5 transition-transform" />
         </motion.button>
       </div>
 
-      {/* 4. GLASSMORPHIC BOTTOM FEATURE DOCK (Docked across the entire bottom of the hero) */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.45, ease: 'easeOut' }}
-        className="relative z-30 w-full bg-neutral-950/40 backdrop-blur-xl border-t border-white/10"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
+      {/* 4. TRUST BAR — NO overlay, NO blur, NO background. Just sits over the hero. */}
+      <div className="relative z-30 w-full border-t border-white/10">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] py-6 sm:py-7">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            
-            {/* Feature 1: Fast & Free Shipping */}
-            <div className="flex items-start gap-3.5 group">
-              <div className="w-10 h-10 rounded-lg bg-amber-950/40 border border-amber-600/30 text-amber-200 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
+
+            {/* Feature 1 */}
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
                 <Package className="w-5 h-5 stroke-[1.7]" />
               </div>
-              <div className="space-y-0.5">
-                <h3 className="font-heading font-semibold text-sm text-white tracking-tight">
+              <div className="space-y-1">
+                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
                   Fast & Free Shipping
                 </h3>
-                <p className="text-xs text-white/70 leading-relaxed">
+                <p className="text-sm text-white/75 leading-relaxed">
                   We deliver your favorite styles fast, with free shipping on eligible orders.
                 </p>
               </div>
             </div>
 
-            {/* Feature 2: 100% Secure */}
-            <div className="flex items-start gap-3.5 group">
-              <div className="w-10 h-10 rounded-lg bg-amber-950/40 border border-amber-600/30 text-amber-200 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
+            {/* Feature 2 */}
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-5 h-5 stroke-[1.7]" />
               </div>
-              <div className="space-y-0.5">
-                <h3 className="font-heading font-semibold text-sm text-white tracking-tight">
+              <div className="space-y-1">
+                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
                   100% Secure
                 </h3>
-                <p className="text-xs text-white/70 leading-relaxed">
+                <p className="text-sm text-white/75 leading-relaxed">
                   Pay with confidence through secure, encrypted, & trusted payments.
                 </p>
               </div>
             </div>
 
-            {/* Feature 3: Returns & Exchanges */}
-            <div className="flex items-start gap-3.5 group">
-              <div className="w-10 h-10 rounded-lg bg-amber-950/40 border border-amber-600/30 text-amber-200 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
+            {/* Feature 3 */}
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
                 <RefreshCw className="w-5 h-5 stroke-[1.7]" />
               </div>
-              <div className="space-y-0.5">
-                <h3 className="font-heading font-semibold text-sm text-white tracking-tight">
+              <div className="space-y-1">
+                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
                   Returns & Exchanges
                 </h3>
-                <p className="text-xs text-white/70 leading-relaxed">
+                <p className="text-sm text-white/75 leading-relaxed">
                   We make returns & exchanges quick, easy, & convenient for your peace.
                 </p>
               </div>
             </div>
 
-            {/* Feature 4: Our Premium Support */}
-            <div className="flex items-start gap-3.5 group">
-              <div className="w-10 h-10 rounded-lg bg-amber-950/40 border border-amber-600/30 text-amber-200 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
+            {/* Feature 4 */}
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
                 <Headphones className="w-5 h-5 stroke-[1.7]" />
               </div>
-              <div className="space-y-0.5">
-                <h3 className="font-heading font-semibold text-sm text-white tracking-tight">
+              <div className="space-y-1">
+                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
                   Our Premium Support
                 </h3>
-                <p className="text-xs text-white/70 leading-relaxed">
+                <p className="text-sm text-white/75 leading-relaxed">
                   Our premium support team is always here to help for any query.
                 </p>
               </div>
@@ -311,7 +288,7 @@ export const Hero: React.FC = () => {
 
           </div>
         </div>
-      </motion.div>
+      </div>
 
     </section>
   );
