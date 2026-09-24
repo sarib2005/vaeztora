@@ -35,6 +35,33 @@ const HERO_SLIDES: SlideData[] = [
   },
 ];
 
+const TRUST_FEATURES = [
+  {
+    id: 'shipping',
+    Icon: Package,
+    title: 'Fast & Free Shipping',
+    description: 'We deliver your favorite styles fast, with free shipping on eligible orders.',
+  },
+  {
+    id: 'secure',
+    Icon: ShieldCheck,
+    title: '100% Secure',
+    description: 'Pay with confidence through secure, encrypted, & trusted payments.',
+  },
+  {
+    id: 'returns',
+    Icon: RefreshCw,
+    title: 'Returns & Exchanges',
+    description: 'We make returns & exchanges quick, easy, & convenient for your peace.',
+  },
+  {
+    id: 'support',
+    Icon: Headphones,
+    title: 'Our Premium Support',
+    description: 'Our premium support team is always here to help for any query.',
+  },
+];
+
 const EASE_SMOOTH = [0.16, 1, 0.3, 1] as const;
 
 export const Hero: React.FC = () => {
@@ -68,7 +95,7 @@ export const Hero: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Pure horizontal slide — no opacity, no scale, no fade
+  // ---------- SLIDESHOW VARIANTS (pure horizontal slide) ----------
   const slideVariants: Variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? '100%' : '-100%',
@@ -87,12 +114,44 @@ export const Hero: React.FC = () => {
     }),
   };
 
-  // Content entrance — no opacity on the wrapper, just a subtle y-lift per item
-  const contentItemVariants: Variants = {
-    hidden: { y: 18 },
+  // ---------- HERO CONTENT VARIANTS ----------
+  // Parent staggers the children (h1 → p → buttons)
+  const contentContainerVariants: Variants = {
+    hidden: {},
     visible: {
+      transition: { staggerChildren: 0.09, delayChildren: 0.05 },
+    },
+    exit: {
+      opacity: 0,
+      y: -12,
+      transition: { duration: 0.25, ease: EASE_SMOOTH },
+    },
+  };
+
+  // Each item fades in and lifts
+  const contentItemVariants: Variants = {
+    hidden: { opacity: 0, y: 22 },
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.7, ease: EASE_SMOOTH },
+    },
+  };
+
+  // ---------- TRUST BAR VARIANTS ----------
+  const trustContainerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: { delayChildren: 0.3, staggerChildren: 0.09 },
+    },
+  };
+
+  const trustItemVariants: Variants = {
+    hidden: { opacity: 0, y: 14 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: EASE_SMOOTH },
     },
   };
 
@@ -141,12 +200,14 @@ export const Hero: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${currentSlide}`}
+            variants={contentContainerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className="max-w-2xl space-y-6"
           >
             <motion.h1
               variants={contentItemVariants}
-              initial="hidden"
-              animate="visible"
               className="font-heading text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-md"
             >
               <span className="block">{slide.titleLine1}</span>
@@ -155,9 +216,6 @@ export const Hero: React.FC = () => {
 
             <motion.p
               variants={contentItemVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.08 }}
               className="text-white/90 text-sm sm:text-base lg:text-lg max-w-lg font-normal drop-shadow-sm"
             >
               {slide.subtitle}
@@ -165,9 +223,6 @@ export const Hero: React.FC = () => {
 
             <motion.div
               variants={contentItemVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.16 }}
               className="flex flex-wrap items-center gap-3.5 pt-2"
             >
               <a
@@ -224,69 +279,32 @@ export const Hero: React.FC = () => {
       {/* 4. TRUST BAR — NO overlay, NO blur, NO background. Just sits over the hero. */}
       <div className="relative z-30 w-full border-t border-white/10">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] py-6 sm:py-7">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-
-            {/* Feature 1 */}
-            <div className="flex items-start gap-4">
-              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
-                <Package className="w-5 h-5 stroke-[1.7]" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
-                  Fast & Free Shipping
-                </h3>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  We deliver your favorite styles fast, with free shipping on eligible orders.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="flex items-start gap-4">
-              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-5 h-5 stroke-[1.7]" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
-                  100% Secure
-                </h3>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  Pay with confidence through secure, encrypted, & trusted payments.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="flex items-start gap-4">
-              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
-                <RefreshCw className="w-5 h-5 stroke-[1.7]" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
-                  Returns & Exchanges
-                </h3>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  We make returns & exchanges quick, easy, & convenient for your peace.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="flex items-start gap-4">
-              <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
-                <Headphones className="w-5 h-5 stroke-[1.7]" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
-                  Our Premium Support
-                </h3>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  Our premium support team is always here to help for any query.
-                </p>
-              </div>
-            </div>
-
-          </div>
+          <motion.div
+            variants={trustContainerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+          >
+            {TRUST_FEATURES.map(({ id, Icon, title, description }) => (
+              <motion.div
+                key={id}
+                variants={trustItemVariants}
+                className="flex items-start gap-4"
+              >
+                <div className="w-9 h-9 rounded-full bg-black/25 border border-white/10 text-white flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 stroke-[1.7]" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-heading font-semibold text-lg text-white tracking-tight">
+                    {title}
+                  </h3>
+                  <p className="text-sm text-white/75 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
 
