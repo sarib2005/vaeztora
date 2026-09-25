@@ -166,7 +166,7 @@ export const ExploreBeyondFashion: React.FC<ExploreBeyondFashionProps> = ({ onAd
   };
 
   return (
-    <section className="w-full bg-white py-16 sm:py-24 select-none transition-colors">
+    <section className="w-full bg-white py-16 sm:py-12 select-none transition-colors">
       <motion.div
         variants={sectionVariants}
         initial="hidden"
