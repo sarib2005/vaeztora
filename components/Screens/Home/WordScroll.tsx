@@ -50,7 +50,7 @@ export const WordScroll: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative bg-[#f0f1f4] text-neutral-900 select-none py-24 sm:py-32"
+      className="relative bg-[#f0f1f4] text-neutral-900 select-none py-24 sm:py-12"
     >
       {/* Soft studio radial gradient */}
       <div className="absolute inset-0 bg-radial from-white via-[#eff0f3] to-[#e4e6eb] pointer-events-none" />

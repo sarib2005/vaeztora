@@ -145,7 +145,7 @@ export const Trending: React.FC<TrendingForHerProps> = ({ onAddToCart }) => {
   };
 
   return (
-    <section className="w-full bg-[#f9f9fb] py-18 sm:py-24 select-none transition-colors">
+    <section className="w-full bg-[#f9f9fb] py-18 sm:py-12 select-none transition-colors">
       <motion.div
         variants={sectionVariants}
         initial="hidden"
