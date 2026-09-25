@@ -86,14 +86,14 @@ export function AnnouncementBar() {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full h-[var(--announcement-height)] bg-black text-neutral-300 border-b border-neutral-900 select-none text-[11.5px] tracking-tight z-40"
       >
-        <div className="w-full px-[98px] h-full flex items-center justify-between gap-4">
+        <div className="w-full px-3 sm:px-6 lg:px-[98px] h-full flex items-center justify-between gap-4">
           
           {/* 1. LEFT: Social Icons + Phone Number */}
           <motion.div
             initial={{ opacity: 0, x: -14 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.15, ease: 'easeOut' }}
-            className="flex items-center gap-3 sm:gap-4 shrink-0"
+            className="hidden lg:flex items-center gap-3 sm:gap-4 shrink-0"
           >
             {/* Social Icons from SocialIcons.tsx */}
             <SocialIcons
@@ -148,7 +148,7 @@ export function AnnouncementBar() {
             initial={{ opacity: 0, x: 14 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.18, ease: 'easeOut' }}
-            className="flex items-center gap-4 sm:gap-5 shrink-0"
+            className="hidden lg:flex items-center gap-4 sm:gap-5 shrink-0"
           >
             {/* Stores Button */}
             <button
