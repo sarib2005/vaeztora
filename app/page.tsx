@@ -1,4 +1,5 @@
 import AnnouncementBar from "@/components/Reusable/AnnouncementBar"
+import { Blogs } from "@/components/Screens/Home/Blogs"
 import { ExploreBeyondFashion } from "@/components/Screens/Home/ExploreBeyondFasion"
 import FashionDesign from "@/components/Screens/Home/FashionDesign"
 import { FashionShowcase } from "@/components/Screens/Home/FashionShowcase"
@@ -24,6 +25,7 @@ export default function Home() {
       <FashionDesign/>
       <PerfectPairing/>
       <PicksSale/>
+      <Blogs/>
     </main>
   )
 
