@@ -8,6 +8,7 @@ import { NewSeason } from "@/components/Screens/Home/NewSeason"
 import { PerfectPairing } from "@/components/Screens/Home/PerfectPairing"
 import { PicksSale } from "@/components/Screens/Home/PickSale"
 import { PremiumSection } from "@/components/Screens/Home/PremiumSection"
+import Testimonials from "@/components/Screens/Home/Testimonials"
 import { Trending } from "@/components/Screens/Home/Trending"
 import { WordScroll } from "@/components/Screens/Home/WordScroll"
 
@@ -26,6 +27,7 @@ export default function Home() {
       <PerfectPairing/>
       <PicksSale/>
       <Blogs/>
+      <Testimonials/>
     </main>
   )
 
