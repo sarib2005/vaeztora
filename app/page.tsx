@@ -1,4 +1,5 @@
 import AnnouncementBar from "@/components/Reusable/AnnouncementBar"
+import { ExploreBeyondFashion } from "@/components/Screens/Home/ExploreBeyondFasion"
 import { FashionShowcase } from "@/components/Screens/Home/FashionShowcase"
 import { Hero } from "@/components/Screens/Home/Hero"
 import { NewSeason } from "@/components/Screens/Home/NewSeason"
@@ -16,6 +17,7 @@ export default function Home() {
       <Trending/>
       <PremiumSection/>
       <WordScroll/>
+      <ExploreBeyondFashion/>
     </main>
   )
 
