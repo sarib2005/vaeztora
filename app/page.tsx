@@ -5,6 +5,7 @@ import { FashionShowcase } from "@/components/Screens/Home/FashionShowcase"
 import { Hero } from "@/components/Screens/Home/Hero"
 import { NewSeason } from "@/components/Screens/Home/NewSeason"
 import { PerfectPairing } from "@/components/Screens/Home/PerfectPairing"
+import { PicksSale } from "@/components/Screens/Home/PickSale"
 import { PremiumSection } from "@/components/Screens/Home/PremiumSection"
 import { Trending } from "@/components/Screens/Home/Trending"
 import { WordScroll } from "@/components/Screens/Home/WordScroll"
@@ -22,6 +23,7 @@ export default function Home() {
       <ExploreBeyondFashion/>
       <FashionDesign/>
       <PerfectPairing/>
+      <PicksSale/>
     </main>
   )
 
