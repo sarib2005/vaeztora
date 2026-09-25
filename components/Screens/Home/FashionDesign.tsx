@@ -57,17 +57,17 @@ const defaultTicker: MarqueeItem[] = [
 
 const defaultLeft: SplitPanelData = {
   options: [
-    { id: "newest", label: "Newest", image: "https://images.unsplash.com/photo-1621062089461-01f1eaebb66c?w=955&h=800&fit=crop&auto=format&q=80", alt: "Men — newest" },
-    { id: "stylish", label: "Stylish", image: "https://images.unsplash.com/photo-1621061415651-2b7fa415360b?w=955&h=800&fit=crop&auto=format&q=80", alt: "Men — stylish" },
-    { id: "hottest", label: "Hottest", image: "https://images.unsplash.com/photo-1547597466-50406ff4f363?w=955&h=800&fit=crop&auto=format&q=80", alt: "Men — hottest" },
+    { id: "newest", label: "Newest", image: "/images/homeimgs/3f.webp", alt: "Men — newest" },
+    { id: "stylish", label: "Stylish", image: "/images/homeimgs/2f.webp", alt: "Men — stylish" },
+    { id: "hottest", label: "Hottest", image: "/images/homeimgs/1f.webp", alt: "Men — hottest" },
   ],
 };
 
 const defaultRight: SplitPanelData = {
   options: [
-    { id: "newest", label: "Newest", image: "https://images.unsplash.com/photo-1698681375999-8faa3e824cd9?w=955&h=800&fit=crop&auto=format&q=80", alt: "Women — newest" },
-    { id: "stylish", label: "Stylish", image: "https://images.unsplash.com/photo-1517677129300-07b130802f46?w=955&h=800&fit=crop&auto=format&q=80", alt: "Women — stylish" },
-    { id: "hottest", label: "Hottest", image: "https://images.unsplash.com/photo-1610384458867-67792bc5a7a6?w=955&h=800&fit=crop&auto=format&q=80", alt: "Women — hottest" },
+    { id: "newest", label: "Trending", image: "/images/homeimgs/img-r.webp", alt: "Women — newest" },
+    { id: "stylish", label: "Latest", image: "/images/homeimgs/img-4.webp", alt: "Women — stylish" },
+    { id: "hottest", label: "Ultimate", image: "/images/homeimgs/img-3.webp", alt: "Women — hottest" },
   ],
 };
 
@@ -235,7 +235,7 @@ function Panel({ data }: { data: SplitPanelData }) {
             alt={active.alt}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="object-cover object-top"
             priority={active.id === defaultOption.id}
           />
         </motion.div>
