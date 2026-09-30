@@ -19,35 +19,35 @@ const CARDS_DATA: FashionCard[] = [
   {
     id: 1,
     numberStr: '01',
-    image: '/images/homeimgs/show1.png',
-    // tickerText: 'TANK TOP SALE · TANK TOP SALE · TANK TOP SALE',
-    title: 'Modern Fits for Modern Life',
+    image:
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=85',
+    title: 'Timeless Handbags, Made to Carry It All',
     description:
-      'Elevate your everyday style with modern designs made for comfort, & confidence. Discover thoughtfully crafted apparel that blends contemporary design.',
-    buttonText: 'SHOP NOW',
-    link: '#shop-tank-tops',
+      'Discover elegant handbags designed to complement every occasion. From everyday essentials to statement pieces, find the perfect balance of style, function, and sophistication.',
+    buttonText: 'SHOP HANDBAGS',
+    link: '#shop-handbags',
   },
   {
     id: 2,
     numberStr: '02',
-    image: '/images/homeimgs/show2.png',
-    // tickerText: 'SUNLIT FLEECE · WINTER WARMTH · LIMITED DROP',
-    title: 'Sunlit Textures & Warmth',
+    image:
+      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=85',
+    title: 'Jewellery That Makes a Statement',
     description:
-      'Ultra-soft statement shearling silhouettes infused with rich earth tones. Unrivaled insulation without compromising effortless luxury.',
-    buttonText: 'VIEW COLLECTION',
-    link: '#view-collection',
+      'Add the finishing touch to your look with carefully selected jewellery. Explore elegant pieces designed to bring subtle shine or bold character to every outfit.',
+    buttonText: 'EXPLORE JEWELLERY',
+    link: '#shop-jewellery',
   },
   {
     id: 3,
     numberStr: '03',
-    image: '/images/homeimgs/show3.png',
-    // tickerText: 'STREET LAYERS · NEW ARRIVALS · AUTUMN CAPSULE',
-    title: 'Architectural Comfort',
+    image:
+      'https://thestylefits.com/cdn/shop/files/ChatGPT_Image_Aug_10_2026_12_47_25_AM.png?crop=center&height=2048&v=1786304975&width=2048',
+    title: 'Elegant Abayas, Effortlessly Refined',
     description:
-      'Engineered for transition and movement. Lightweight weather-resistant outerwear tailored with sculpted necklines and fluid draping.',
-    buttonText: 'EXPLORE NOW',
-    link: '#explore-outerwear',
+      'Embrace timeless modest fashion with beautifully crafted abayas. Discover flowing silhouettes, refined details, and versatile designs made for everyday elegance.',
+    buttonText: 'SHOP ABAYAS',
+    link: '#shop-abbayas',
   },
 ];
 
