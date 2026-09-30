@@ -228,15 +228,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Search className="w-[18px] h-[18px] stroke-[1.8]" />
           </button>
 
-          {/* Profile / User */}
-          <button
-            type="button"
-            className="p-1.5 hover:text-white hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full hover:bg-white/10"
-            title="My Account"
-            aria-label="Account"
-          >
-            <User className="w-[18px] h-[18px] stroke-[1.8]" />
-          </button>
+          
 
           {/* Shopping Bag */}
           <button
@@ -252,6 +244,16 @@ export const Header: React.FC<HeaderProps> = ({
                 {cartCount}
               </span>
             )}
+          </button>
+
+          {/* Profile / User */}
+          <button
+            type="button"
+            className="p-1.5 hover:text-white hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            title="My Account"
+            aria-label="Account"
+          >
+            <User className="w-[18px] h-[18px] stroke-[1.8]" />
           </button>
 
           {/* Mobile Hamburger Menu */}
