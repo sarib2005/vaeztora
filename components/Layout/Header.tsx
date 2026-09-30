@@ -98,6 +98,8 @@ export const Header: React.FC<HeaderProps> = ({
       ],
     },
     { label: 'About', href: '#about', hasDropdown: false },
+    { label: 'Track Order', href: '#track-order', hasDropdown: false },
+    { label: 'Contact', href: '#contact', hasDropdown: false },
   ];
 
   return (
