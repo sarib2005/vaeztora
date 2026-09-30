@@ -25,7 +25,10 @@ import {
 
 interface SlideData {
   id: number;
-  image: string;
+  /** Path to the looping background video (5–10s, muted, no audio track needed) */
+  video: string;
+  /** Optional first-frame fallback while the video buffers */
+  poster?: string;
   titleLine1: string;
   titleLine2: string;
   subtitle: string;
@@ -36,21 +39,36 @@ interface SlideData {
 const HERO_SLIDES: SlideData[] = [
   {
     id: 1,
-    image: '/images/homeimgs/slide1.png',
-    titleLine1: 'Your Signature Style',
-    titleLine2: 'Right Starts Here',
-    subtitle: 'Refresh your wardrobe with elevated everyday essentials.',
-    primaryCta: { label: 'WOMEN', href: '#women' },
+    // Replace with your handbags video later
+    video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    titleLine1: 'Handcrafted Icons',
+    titleLine2: 'Carried With Grace',
+    subtitle:
+      'Discover handbags cut from supple leather — made to move with you.',
+    primaryCta: { label: 'SHOP BAGS', href: '#bags' },
     secondaryCta: { label: 'VIEW ALL', href: '#all' },
   },
   {
     id: 2,
-    image: '/images/homeimgs/slide2.png',
-    titleLine1: 'Pure Textures,',
-    titleLine2: 'Effortless Form',
-    subtitle: 'Crafted from breathable organic linen and hand-spun mulberry silk.',
-    primaryCta: { label: 'NEW IN', href: '#new-in' },
+    // Replace with your jewelry video later
+    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+    titleLine1: 'Quiet Luxury,',
+    titleLine2: 'Worn Every Day',
+    subtitle:
+      'Fine jewellery in 18k gold and ethically sourced stones.',
+    primaryCta: { label: 'SHOP JEWELLERY', href: '#jewellery' },
     secondaryCta: { label: 'COLLECTIONS', href: '#collections' },
+  },
+  {
+    id: 3,
+    // Replace with your abayas video later
+    video: 'https://vjs.zencdn.net/v/oceans.mp4',
+    titleLine1: 'Fluid Silhouettes,',
+    titleLine2: 'Effortless Modesty',
+    subtitle:
+      'Contemporary abayas cut from breathable, flowing fabrics.',
+    primaryCta: { label: 'SHOP ABAYAS', href: '#abayas' },
+    secondaryCta: { label: 'NEW IN', href: '#new-in' },
   },
 ];
 
@@ -121,7 +139,56 @@ export const Hero: React.FC = () => {
     startValue: 0,
   });
 
+  /* One <video> per track slot (including the two clones) */
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  /* Track index of the video that is currently allowed to play */
+  const activeVideoPosRef = useRef(-1);
+
   const slide = HERO_SLIDES[currentSlide];
+
+  /* ------------------------------------------------------------------ */
+  /*  VIDEO HELPERS                                                      */
+  /* ------------------------------------------------------------------ */
+
+  /** Play the video at `pos`, pause every other one. */
+  const playVideoAt = useCallback((pos: number, keepTime = false) => {
+    const list = videoRefs.current;
+
+    for (let i = 0; i < list.length; i++) {
+      const v = list[i];
+      if (!v || i === pos) continue;
+      if (!v.paused) v.pause();
+    }
+
+    const v = list[pos];
+    if (!v) return;
+
+    if (!keepTime) {
+      try {
+        if (v.currentTime !== 0) v.currentTime = 0;
+      } catch {
+        /* metadata not ready yet — browser will start from 0 anyway */
+      }
+    }
+
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+
+    activeVideoPosRef.current = pos;
+  }, []);
+
+  /** Carry the playhead across the clone → real-slide teleport. */
+  const copyVideoTime = useCallback((fromPos: number, toPos: number) => {
+    const from = videoRefs.current[fromPos];
+    const to = videoRefs.current[toPos];
+    if (!from || !to || to.readyState < 1) return;
+    try {
+      const t = from.currentTime;
+      if (Number.isFinite(t)) to.currentTime = t;
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   /* ------------------------------------------------------------------ */
   /*  POSITION HELPERS                                                   */
@@ -131,14 +198,21 @@ export const Hero: React.FC = () => {
   const normalize = useCallback(() => {
     const w = widthRef.current;
     if (!w) return;
+
     if (posRef.current > SLIDE_COUNT) {
+      const from = posRef.current;
       posRef.current = 1;
+      copyVideoTime(from, 1);
       x.set(-w);
+      playVideoAt(1, true); // keep the playhead — no visible jump
     } else if (posRef.current < 1) {
+      const from = posRef.current;
       posRef.current = SLIDE_COUNT;
+      copyVideoTime(from, SLIDE_COUNT);
       x.set(-SLIDE_COUNT * w);
+      playVideoAt(SLIDE_COUNT, true);
     }
-  }, [x]);
+  }, [copyVideoTime, playVideoAt, x]);
 
   /* Slow, smooth glide between slides */
   const slideTo = useCallback(
@@ -147,6 +221,10 @@ export const Hero: React.FC = () => {
       if (!w) return;
       posRef.current = targetPos;
       animatingRef.current = true;
+
+      /* Start the incoming video right away so the slide feels alive */
+      playVideoAt(targetPos);
+
       animate(x, -targetPos * w, {
         type: 'tween',
         duration: SLIDE_DURATION,
@@ -157,7 +235,7 @@ export const Hero: React.FC = () => {
         },
       });
     },
-    [normalize, x]
+    [normalize, playVideoAt, x]
   );
 
   /* Drag didn't pass the threshold — glide gently back into place */
@@ -187,6 +265,17 @@ export const Hero: React.FC = () => {
     [slideTo]
   );
 
+  /* A video finished → glide to the next slide (and its video) */
+  const handleVideoEnd = useCallback(
+    (trackIndex: number) => {
+      if (trackIndex !== activeVideoPosRef.current) return; // stale/clone
+      if (dragRef.current.active) return; // let the user finish dragging
+      if (animatingRef.current) return; // already moving on
+      goTo(1);
+    },
+    [goTo]
+  );
+
   /* ------------------------------------------------------------------ */
   /*  MEASURE — keeps x in sync with the real pixel width               */
   /* ------------------------------------------------------------------ */
@@ -204,6 +293,9 @@ export const Hero: React.FC = () => {
 
     update();
 
+    /* Kick off the first video as soon as the hero is on screen */
+    playVideoAt(1);
+
     const ro = new ResizeObserver(update);
     ro.observe(el);
     window.addEventListener('orientationchange', update);
@@ -212,7 +304,7 @@ export const Hero: React.FC = () => {
       ro.disconnect();
       window.removeEventListener('orientationchange', update);
     };
-  }, [x]);
+  }, [playVideoAt, x]);
 
   /* ------------------------------------------------------------------ */
   /*  KEYBOARD                                                           */
@@ -343,9 +435,36 @@ export const Hero: React.FC = () => {
               key={`${s.id}-${i}`}
               className="relative h-full w-full shrink-0 overflow-hidden"
             >
-              <img
-                src={s.image}
-                alt={`Editorial look ${s.id}`}
+              <video
+                ref={(el) => {
+                  videoRefs.current[i] = el;
+                  if (el) {
+                    /* React sometimes drops these on hydration — force them */
+                    el.muted = true;
+                    el.playsInline = true;
+                    el.setAttribute('muted', '');
+                    el.setAttribute('playsinline', '');
+                    el.setAttribute('webkit-playsinline', '');
+                  }
+                }}
+                src={s.video}
+                poster={s.poster}
+                muted
+                playsInline
+                autoPlay={i === 1}
+                preload="auto"
+                disablePictureInPicture
+                controls={false}
+                onEnded={() => handleVideoEnd(i)}
+                /* Safety net: if autoplay was blocked, retry once playable */
+                onCanPlay={(e) => {
+                  if (
+                    activeVideoPosRef.current === i &&
+                    e.currentTarget.paused
+                  ) {
+                    e.currentTarget.play().catch(() => {});
+                  }
+                }}
                 className="
                   h-full w-full object-cover
                   object-[center_35%]
@@ -354,12 +473,13 @@ export const Hero: React.FC = () => {
                   pointer-events-none select-none
                 "
                 draggable={false}
+                aria-hidden="true"
               />
             </div>
           ))}
         </motion.div>
 
-        {/* Legibility gradient — sits above images, below content */}
+        {/* Legibility gradient — sits above media, below content */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none" />
         {/* Extra bottom gradient for small screens so text stays readable */}
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none lg:hidden" />
