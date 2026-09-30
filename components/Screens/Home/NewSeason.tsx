@@ -22,43 +22,47 @@ export const NewSeason: React.FC = () => {
 
   // Row 1 items matching image
   const row1: PillCategory[] = [
-    { id: 't-shirts', type: 'pill', label: 'T-Shirts', count: '48 styles' },
-    {
-      id: 'img-male',
-      type: 'image',
-      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
-      shape: 'wide',
-    },
-    { id: 'jackets', type: 'pill', label: 'Jackets', count: '32 styles' },
-    { id: 'hoodies', type: 'pill', label: 'Hoodies', count: '24 styles' },
-    { id: 'trending-tops', type: 'pill', label: 'Trending Tops', count: '56 styles' },
-  ];
+  { id: 'handbags', type: 'pill', label: 'Handbags', count: '48 styles' },
+  {
+    id: 'img-handbags',
+    type: 'image',
+    image:
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80',
+    shape: 'wide',
+  },
+  { id: 'shoulder-bags', type: 'pill', label: 'Shoulder Bags', count: '32 styles' },
+  { id: 'tote-bags', type: 'pill', label: 'Tote Bags', count: '24 styles' },
+  { id: 'crossbody-bags', type: 'pill', label: 'Crossbody Bags', count: '36 styles' },
+];
 
-  // Row 2 items matching image
-  const row2: PillCategory[] = [
-    { id: 'summer-dresses', type: 'pill', label: 'Summer Dresses', count: '42 styles' },
-    { id: 'sweaters', type: 'pill', label: 'Sweaters', count: '29 styles' },
-    { id: 'casual-shirts', type: 'pill', label: 'Casual Shirts', count: '38 styles' },
-    {
-      id: 'img-summer',
-      type: 'image',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80',
-      shape: 'wide',
-    },
-    { id: 'gym-suits', type: 'pill', label: 'Gym Suits', count: '22 styles' },
-  ];
+// Row 2 — Jewellery
+const row2: PillCategory[] = [
+  { id: 'necklaces', type: 'pill', label: 'Necklaces', count: '42 styles' },
+  { id: 'earrings', type: 'pill', label: 'Earrings', count: '38 styles' },
+  { id: 'bracelets', type: 'pill', label: 'Bracelets', count: '29 styles' },
+  {
+    id: 'img-jewellery',
+    type: 'image',
+    image:
+      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=500&q=80',
+    shape: 'wide',
+  },
+  { id: 'rings', type: 'pill', label: 'Rings', count: '26 styles' },
+];
 
-  // Row 3 items matching image
-  const row3: PillCategory[] = [
-    { id: 'sports-wear', type: 'pill', label: 'Sports wear', count: '35 styles' },
-    {
-      id: 'img-chic',
-      type: 'image',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-      shape: 'round',
-    },
-    { id: 'chic-style', type: 'pill', label: 'Chic Style', count: '60 styles' },
-  ];
+// Row 3 — Abayas
+const row3: PillCategory[] = [
+  { id: 'abayas', type: 'pill', label: 'Abayas', count: '35 styles' },
+  {
+    id: 'img-abayas',
+    type: 'image',
+    image:
+      '/images/homeimgs/abaya.webp',
+    shape: 'round',
+  },
+  { id: 'open-abayas', type: 'pill', label: 'Open Abayas', count: '28 styles' },
+  { id: 'embroidered-abayas', type: 'pill', label: 'Embroidered', count: '22 styles' },
+];
 
   return (
     <section className="relative w-full bg-[#f4f4f7] py-20 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-hidden select-none">
