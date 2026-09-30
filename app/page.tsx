@@ -22,9 +22,9 @@ export default function Home() {
       <Trending/>
       <PremiumSection/>
       <WordScroll/>
-      <ExploreBeyondFashion/>
-      <FashionDesign/>
-      <PerfectPairing/>
+      {/* <ExploreBeyondFashion/> */}
+      {/* <FashionDesign/> */}
+      {/* <PerfectPairing/> */}
       <PicksSale/>
       <Blogs/>
       <Testimonials/>
