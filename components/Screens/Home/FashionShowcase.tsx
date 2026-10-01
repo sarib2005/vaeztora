@@ -8,7 +8,7 @@ interface FashionCard {
   id: number;
   numberStr: string;
   image: string;
-  tickerText: string;
+  tickerText?: string; // optional — ticker UI is currently disabled
   title: string;
   description: string;
   buttonText: string;
@@ -97,14 +97,6 @@ export const FashionShowcase: React.FC = () => {
                 }}
                 onMouseEnter={() => setActiveId(card.id)}
                 onClick={() => setActiveId(card.id)}
-                // Padding is now the SAME in both states (moved out of the ternary,
-                // into the shared base classes below). It used to jump from
-                // p-3/p-3.5 -> p-4/p-5 the instant a card opened. That jump is a
-                // real box-model change, not something Framer's layout FLIP can
-                // fake with a transform, so the inner content box shrank by that
-                // padding delta for a frame or two before the outer card's spring
-                // caught up — that's the "shrink" glitch. Keeping padding constant
-                // removes that mismatch entirely.
                 className={`relative rounded-[32px] overflow-hidden cursor-pointer transform-gpu will-change-[transform,flex] transition-[background-color,border-color,box-shadow] duration-300 p-4 sm:p-5 ${
                   isOpened
                     ? 'lg:flex-[2.5] bg-white border border-neutral-200/90 shadow-sm'
@@ -131,30 +123,6 @@ export const FashionShowcase: React.FC = () => {
                     and Framer Motion compensates the border-radius as it scales,
                     so it never "pops" back to square edges mid-transition, and it
                     keeps the exact same rounded-[24px] corner in every state.
-
-                    z-10 here (paired with z-0 on the text panel below) pins the
-                    image above the text panel in stacking order. Framer applies
-                    layout animations as CSS transforms, and any element with a
-                    transform gets its own stacking context — without an explicit
-                    z-index, plain DOM order decides who paints on top when two
-                    transformed siblings visually overlap mid-transition. The text
-                    panel comes after the image in the JSX, so it was winning that
-                    default ordering and briefly drawing over the image while the
-                    row was still settling. Explicit z-index removes the ambiguity.
-
-                    md:w-[52%] (not 48%) is the actual fix for the shrink itself.
-                    The row always has one card at flex 2.5 and two at flex 1.3
-                    (sum 5.1), so a collapsed card's width ≈ 1.3/5.1 of the row
-                    and an opened card's width ≈ 2.5/5.1 of the row. For the
-                    image's rendered PIXEL width to stay identical across both
-                    states, its share of the opened card must equal
-                    1.3/2.5 = 0.52 — not an arbitrary 0.48. At exactly 52%, the
-                    image's before/after size is the same number, so there's
-                    nothing for the layout spring to animate on that axis at
-                    all: it doesn't just move faster, it doesn't move. That's
-                    also why left-to-right vs right-to-left no longer matters —
-                    there's no size delta to be asymmetric about either way. The
-                    card growing around it is what makes room for the text.
                   */}
                   <motion.div
                     layout
@@ -172,12 +140,6 @@ export const FashionShowcase: React.FC = () => {
                       `layout` and does the resizing — this image just fills
                       it with w-full h-full, so it naturally inherits the
                       container's transform like any normal child.
-                      Giving the image its OWN `layout` on top of the
-                      container's was the actual bug: Framer treated them as
-                      two independently-animating boxes, each applying its
-                      own corrective scale/border-radius transform, and the
-                      two fighting each other is what caused the extra
-                      "shrink" and ate the bottom corner radius mid-transition.
                     */}
                     <img
                       src={card.image}
@@ -245,18 +207,6 @@ export const FashionShowcase: React.FC = () => {
 
                   {/*
                     Expanded-only: title, description, CTA, large outline number.
-                    mode="popLayout" is the key fix for the "shrink then snap" glitch:
-                    without it, this panel keeps its flex space reserved for the
-                    full 0.18s exit fade, so the image's layout spring only gets
-                    its real final width partway through, then jumps the rest of
-                    the way instantly when the panel finally unmounts. popLayout
-                    takes it out of flow (position: absolute) the instant it starts
-                    exiting, so the image animates to its true final size in one
-                    continuous motion instead of two.
-
-                    z-0 here explicitly puts this panel BEHIND the image container
-                    (which is z-10) whenever the two visually overlap mid-animation,
-                    instead of relying on DOM order (which put it on top before).
                   */}
                   <AnimatePresence mode="popLayout" initial={false}>
                     {isOpened && (

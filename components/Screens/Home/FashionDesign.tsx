@@ -241,16 +241,24 @@ function Panel({ data }: { data: SplitPanelData }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* hover backdrop: darkens + blurs the photo */}
-      <motion.div
-        initial={false}
-        animate={{
+      {/*
+        Hover backdrop: darkens + blurs the photo.
+        Framer Motion's `animate` type only allows a curated set of CSS
+        properties — `WebkitBackdropFilter` (a vendor-prefixed key) is NOT
+        in that set, so passing it inside `animate` throws a TS error.
+        Instead we drive it via plain CSS on the `style` prop with a CSS
+        transition, which animates just as smoothly and keeps the vendor
+        prefix alongside the standard property.
+      */}
+      <div
+        className="absolute inset-0 bg-black/45"
+        style={{
           opacity: hovered ? 1 : 0,
           backdropFilter: hovered ? "blur(8px)" : "blur(0px)",
           WebkitBackdropFilter: hovered ? "blur(8px)" : "blur(0px)",
+          transition:
+            "opacity 0.35s ease-out, backdrop-filter 0.35s ease-out, -webkit-backdrop-filter 0.35s ease-out",
         }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className="absolute inset-0 bg-black/45"
       />
 
       {/* quiet base gradient so the photo reads even without hover */}
