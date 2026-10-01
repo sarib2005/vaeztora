@@ -1,75 +1,10 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
+import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ShoppingBag, Check } from 'lucide-react';
-
-interface TrendingProduct {
-  id: number;
-  title: string;
-  price: string;
-  inStock: boolean;
-  image: string;
-  hoverImage: string;
-  category: string;
-}
-
-const TRENDING_PRODUCTS: TrendingProduct[] = [
-  {
-    id: 1,
-    title: 'Structured Leather Tote',
-    price: 'From Rs. 4,200.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=1000&q=85',
-    category: 'Totes',
-  },
-  {
-    id: 2,
-    title: 'Quilted Chain Crossbody',
-    price: 'From Rs. 3,650.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=1000&q=85',
-    category: 'Crossbody',
-  },
-  {
-    id: 3,
-    title: 'Mini Top-Handle Bag',
-    price: 'From Rs. 2,980.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1000&q=85',
-    category: 'Mini Bags',
-  },
-  {
-    id: 4,
-    title: 'Woven Raffia Shoulder Bag',
-    price: 'From Rs. 3,150.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1548863227-3af567fc3b27?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1000&q=85',
-    category: 'Shoulder Bags',
-  },
-  {
-    id: 5,
-    title: 'Evening Satin Clutch',
-    price: 'From Rs. 2,450.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=85',
-    category: 'Clutches',
-  },
-  {
-    id: 6,
-    title: 'Soft Slouch Hobo Bag',
-    price: 'From Rs. 5,100.00 INR',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1000&q=85',
-    hoverImage: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=1000&q=85',
-    category: 'Hobo Bags',
-  },
-];
+import { PRODUCTS, formatPrice } from '@/data/product';
 
 interface TrendingForHerProps {
   onAddToCart?: () => void;
@@ -78,31 +13,19 @@ interface TrendingForHerProps {
 
 const EASE_SMOOTH = [0.16, 1, 0.3, 1] as const;
 
-// Section entrance — header + carousel
 const sectionVariants: Variants = {
   hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.05,
-    },
-  },
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
 };
 
 const headerVariants: Variants = {
   hidden: { y: 24 },
-  visible: {
-    y: 0,
-    transition: { duration: 0.7, ease: EASE_SMOOTH },
-  },
+  visible: { y: 0, transition: { duration: 0.7, ease: EASE_SMOOTH } },
 };
 
 const carouselVariants: Variants = {
   hidden: { y: 30 },
-  visible: {
-    y: 0,
-    transition: { duration: 0.8, ease: EASE_SMOOTH },
-  },
+  visible: { y: 0, transition: { duration: 0.8, ease: EASE_SMOOTH } },
 };
 
 export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, onViewAll }) => {
@@ -110,13 +33,10 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
   const [addedId, setAddedId] = useState<number | null>(null);
 
   const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 340;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
+    scrollContainerRef.current?.scrollBy({
+      left: direction === 'left' ? -340 : 340,
+      behavior: 'smooth',
+    });
   };
 
   const handleAddToCart = (id: number) => {
@@ -134,7 +54,6 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
         viewport={{ once: true, amount: 0.15 }}
         className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] space-y-8 sm:space-y-10"
       >
-
         {/* Header Bar */}
         <motion.div
           variants={headerVariants}
@@ -192,7 +111,7 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
           className="flex items-stretch gap-6 overflow-x-auto scrollbar-none pb-4 pt-1 snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {TRENDING_PRODUCTS.map((product, idx) => (
+          {PRODUCTS.map((product, idx) => (
             <motion.div
               key={product.id}
               initial={{ y: 26 }}
@@ -201,8 +120,16 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
                 transition: { duration: 0.65, ease: EASE_SMOOTH, delay: idx * 0.06 },
               }}
               viewport={{ once: true, amount: 0.2 }}
-              className="min-w-[280px] sm:min-w-[305px] max-w-[320px] flex flex-col justify-between snap-start group"
+              className="relative min-w-[280px] sm:min-w-[305px] max-w-[320px] flex flex-col justify-between snap-start group"
             >
+              {/* Stretched link: whole card opens the product page.
+                  Buttons sit above it with a higher z-index. */}
+              <Link
+                href={`/products/${product.slug}`}
+                aria-label={`View ${product.title}`}
+                className="absolute inset-0 z-[5] rounded-[28px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+              />
+
               {/* Product Image Frame */}
               <div className="relative aspect-[3/3.8] rounded-[28px] overflow-hidden bg-[#e6e8ec] mb-3.5 shadow-xs border border-black/5">
                 <img
@@ -218,16 +145,14 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
 
                 <div className="absolute inset-0 bg-radial from-transparent to-black/5 pointer-events-none" />
 
-                {/* Category chip */}
-                <span className="absolute top-3.5 left-3.5 z-10 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] uppercase font-mono tracking-widest text-neutral-700 shadow-sm">
+                <span className="absolute top-3.5 left-3.5 z-10 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] uppercase font-mono tracking-widest text-neutral-700 shadow-sm pointer-events-none">
                   {product.category}
                 </span>
 
-                {/* Add to bag overlay */}
                 <button
                   type="button"
                   onClick={() => handleAddToCart(product.id)}
-                  className="absolute inset-x-3 bottom-3 z-10 py-3 rounded-full bg-white/95 backdrop-blur-md text-neutral-950 text-xs font-semibold shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-white"
+                  className="absolute inset-x-3 bottom-3 z-10 py-3 rounded-full bg-white/95 backdrop-blur-md text-neutral-950 text-xs font-semibold shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 focus-visible:opacity-100 focus-visible:translate-y-0 transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-white"
                 >
                   {addedId === product.id ? (
                     <>
@@ -250,7 +175,7 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
                     {product.title}
                   </h3>
                   <div className="text-xs sm:text-[13px] font-bold text-neutral-950 font-sans tracking-tight">
-                    {product.price}
+                    From {formatPrice(product.price)}
                   </div>
                   <div className="flex items-center gap-1.5 pt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
@@ -261,7 +186,7 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
                 <button
                   type="button"
                   onClick={() => handleAddToCart(product.id)}
-                  className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 hover:scale-105 active:scale-95 transition-all shadow-xs shrink-0 cursor-pointer"
+                  className="relative z-10 w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 hover:scale-105 active:scale-95 transition-all shadow-xs shrink-0 cursor-pointer"
                   title="Add to Bag"
                   aria-label={`Add ${product.title} to bag`}
                 >
@@ -275,7 +200,6 @@ export const TrendingHandbags: React.FC<TrendingForHerProps> = ({ onAddToCart, o
             </motion.div>
           ))}
         </motion.div>
-
       </motion.div>
     </section>
   );
