@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, User, ShoppingBag, ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 interface HeaderProps {
   cartCount?: number;
@@ -15,6 +16,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCart,
   onOpenSearch,
 }) => {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPastTopBanner, setIsPastTopBanner] = useState(false);
@@ -26,6 +29,10 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Smart Hide on Scroll Down, Reveal on Scroll Up
   useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -54,7 +61,16 @@ export const Header: React.FC<HeaderProps> = ({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // ← empty deps now that we use a ref
+  }, [isHomePage]);
+
+  const headerPosition = isHomePage
+    ? isPastTopBanner ? 'top-0' : 'top-[var(--announcement-height)]'
+    : 'top-0';
+  const headerAppearance = isHomePage
+    ? isScrolled
+      ? 'bg-neutral-950/35 backdrop-blur-sm border-b border-white/[0.08] py-3.5'
+      : 'bg-black/10 backdrop-blur-[2px] border-b border-white/[0.06] py-4 sm:py-5'
+    : 'bg-white border-b border-neutral-200 py-3.5 shadow-sm';
 
   const navItems = [
     { label: 'Home', href: '#home', hasDropdown: false },
@@ -105,16 +121,12 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <motion.header
       initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -100 }}
+      animate={{ y: isHomePage && !isVisible ? -100 : 0 }}
       transition={{
         duration: 0.35,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className={`fixed ${isPastTopBanner ? 'top-0' : 'top-[var(--announcement-height)]'} left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-neutral-950/35 backdrop-blur-sm border-b border-white/[0.08] py-3.5'
-          : 'bg-black/10 backdrop-blur-[2px] border-b border-white/[0.06] py-4 sm:py-5'
-      }`}
+      className={`fixed ${headerPosition} left-0 right-0 z-40 transition-all duration-300 ${headerAppearance}`}
     >
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[98px] flex items-center justify-between">
 
@@ -137,14 +149,14 @@ export const Header: React.FC<HeaderProps> = ({
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z" />
             </svg>
             {/* Logo Typography matching reference */}
-            <span className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-white drop-shadow-sm">
+            <span className={`font-heading text-2xl sm:text-3xl font-bold tracking-tight ${isHomePage ? 'text-white drop-shadow-sm' : 'text-neutral-950'}`}>
               King
             </span>
           </div>
         </motion.a>
 
         {/* 2. CENTER NAVIGATION */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs lg:text-sm font-medium text-white/90">
+        <nav className={`hidden md:flex items-center gap-6 lg:gap-8 text-xs lg:text-sm font-medium ${isHomePage ? 'text-white/90' : 'text-neutral-950'}`}>
           {navItems.map((item, idx) => (
             <motion.div
               key={item.label}
@@ -159,8 +171,8 @@ export const Header: React.FC<HeaderProps> = ({
                 href={item.href}
                 className={`flex items-center gap-1 transition-all py-1 cursor-pointer ${
                   activeDropdown === item.label
-                    ? 'text-white font-semibold drop-shadow-md'
-                    : 'text-white/85 hover:text-white'
+                    ? isHomePage ? 'text-white font-semibold drop-shadow-md' : 'text-neutral-950 font-semibold'
+                    : isHomePage ? 'text-white/85 hover:text-white' : 'text-neutral-700 hover:text-black'
                 }`}
               >
                 <span>{item.label}</span>
@@ -183,13 +195,13 @@ export const Header: React.FC<HeaderProps> = ({
                     transition={{ duration: 0.18, ease: 'easeOut' }}
                     className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50 w-56"
                   >
-                    <div className="bg-neutral-950/75 backdrop-blur-md border border-white/10 rounded-xl p-2 shadow-xl overflow-hidden divide-y divide-white/5">
+                    <div className={`${isHomePage ? 'bg-neutral-950/75 backdrop-blur-md border-white/10 divide-white/5' : 'bg-white border-neutral-200 divide-neutral-100'} border rounded-xl p-2 shadow-xl overflow-hidden`}>
                       <div className="py-1 space-y-0.5">
                         {item.items?.map((subItem) => (
                           <a
                             key={subItem.name}
                             href={subItem.href}
-                            className="flex items-center justify-between px-3 py-2 text-xs text-neutral-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                            className={`flex items-center justify-between px-3 py-2 text-xs rounded-lg transition-colors group ${isHomePage ? 'text-neutral-200 hover:text-white hover:bg-white/10' : 'text-neutral-700 hover:text-black hover:bg-neutral-100'}`}
                           >
                             <span>{subItem.name}</span>
                             {subItem.badge ? (
@@ -215,13 +227,13 @@ export const Header: React.FC<HeaderProps> = ({
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-3 sm:gap-4 text-white/90"
+          className={`flex items-center gap-3 sm:gap-4 ${isHomePage ? 'text-white/90' : 'text-neutral-950'}`}
         >
           {/* Search */}
           <button
             type="button"
             onClick={onOpenSearch}
-            className="p-1.5 hover:text-white hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            className={`p-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full ${isHomePage ? 'hover:text-white hover:bg-white/10' : 'hover:text-neutral-600 hover:bg-neutral-100'}`}
             title="Search collection"
             aria-label="Search"
           >
@@ -234,7 +246,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onOpenCart}
-            className="relative p-1.5 hover:text-white hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            className={`relative p-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full ${isHomePage ? 'hover:text-white hover:bg-white/10' : 'hover:text-neutral-600 hover:bg-neutral-100'}`}
             title="Shopping Bag"
             aria-label="Bag"
           >
@@ -249,7 +261,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Profile / User */}
           <button
             type="button"
-            className="p-1.5 hover:text-white hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            className={`p-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer rounded-full ${isHomePage ? 'hover:text-white hover:bg-white/10' : 'hover:text-neutral-600 hover:bg-neutral-100'}`}
             title="My Account"
             aria-label="Account"
           >
@@ -260,7 +272,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-white/10"
+            className={`md:hidden p-1.5 transition-colors cursor-pointer rounded-lg ${isHomePage ? 'hover:text-white hover:bg-white/10' : 'hover:text-neutral-600 hover:bg-neutral-100'}`}
             aria-label="Toggle mobile menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -277,25 +289,25 @@ export const Header: React.FC<HeaderProps> = ({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden border-t border-white/10 bg-neutral-950/85 backdrop-blur-md px-4 sm:px-6 md:px-8 py-5 space-y-4"
+            className={`md:hidden border-t px-4 sm:px-6 md:px-8 py-5 space-y-4 ${isHomePage ? 'border-white/10 bg-neutral-950/85 backdrop-blur-md' : 'border-neutral-200 bg-white'}`}
           >
             {navItems.map((item) => (
               <div key={item.label} className="space-y-2">
                 <a
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block font-medium text-sm text-white hover:text-amber-200 transition-colors"
+                  className={`block font-medium text-sm transition-colors ${isHomePage ? 'text-white hover:text-amber-200' : 'text-neutral-950 hover:text-neutral-500'}`}
                 >
                   {item.label}
                 </a>
                 {item.hasDropdown && (
-                  <div className="pl-3 border-l border-white/10 space-y-1.5">
+                  <div className={`pl-3 border-l space-y-1.5 ${isHomePage ? 'border-white/10' : 'border-neutral-200'}`}>
                     {item.items?.map((sub) => (
                       <a
                         key={sub.name}
                         href={sub.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block text-xs text-neutral-400 hover:text-white transition-colors"
+                        className={`block text-xs transition-colors ${isHomePage ? 'text-neutral-400 hover:text-white' : 'text-neutral-500 hover:text-black'}`}
                       >
                         {sub.name}
                       </a>

@@ -199,7 +199,7 @@ export const ProductDetail: React.FC<{ product: Product; related: Product[] }> =
   return (
     <main className="bg-[#f9f9fb]">
       {/* ── Top: gallery (left) + info (right) ── */}
-      <section className={`${PAD} pt-6 sm:pt-8 pb-12 sm:pb-16`}>
+      <section className={`${PAD} pt-24 sm:pt-28 pb-12 sm:pb-16`}>
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-neutral-500 flex items-center gap-2">
           <Link href="/" className="hover:text-neutral-950 transition-colors">Home</Link>
           <span aria-hidden="true">/</span>
