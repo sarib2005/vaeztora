@@ -374,7 +374,7 @@ export const ProductDetail: React.FC<{ product: Product; related: Product[] }> =
       </section>
 
       {/* ── Collection ── */}
-      <section className={`${PAD} pb-16 sm:pb-20 space-y-8 sm:space-y-10`}>
+      <section className={`${PAD} space-y-8 sm:space-y-10`}>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
           <div className="space-y-2 max-w-xl">
             <h2 className="font-heading text-3xl sm:text-5xl font-bold tracking-tight text-neutral-950">
