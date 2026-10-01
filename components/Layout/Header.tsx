@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
     : 'bg-white border-b border-neutral-200 py-3.5 shadow-sm';
 
   const navItems = [
-    { label: 'Home', href: '#home', hasDropdown: false },
+    // { label: 'Home', href: '#home', hasDropdown: false },
     {
       label: 'Handbags',
       href: '#handbags',
@@ -132,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* 1. BRAND LOGO: "King" with Crown Icon atop K */}
         <motion.a
-          href="#home"
+          href="/"
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -150,7 +150,7 @@ export const Header: React.FC<HeaderProps> = ({
             </svg>
             {/* Logo Typography matching reference */}
             <span className={`font-heading text-2xl sm:text-3xl font-bold tracking-tight ${isHomePage ? 'text-white drop-shadow-sm' : 'text-neutral-950'}`}>
-              King
+              Vaenazluxe
             </span>
           </div>
         </motion.a>

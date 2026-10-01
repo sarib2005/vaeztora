@@ -90,20 +90,7 @@ export function SiteFooter({ onSearchClick }: SiteFooterProps) {
             <motion.div variants={itemVariants} className="space-y-1">
               <div className="inline-flex items-center gap-1 font-heading text-3xl sm:text-4xl text-white font-bold tracking-tight">
                 <span className="relative">
-                  K
-                  <span className="relative inline-block">
-                    i
-                    <svg
-                      className="w-3.5 h-3.5 text-white absolute -top-2.5 left-1/2 -translate-x-1/2"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      stroke="none"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z" />
-                    </svg>
-                  </span>
-                  ng
+                  Vaenazluxe
                 </span>
               </div>
             </motion.div>
